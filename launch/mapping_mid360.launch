@@ -1,0 +1,15 @@
+<launch>
+  <!-- Launch file for publish pose and cylinder -->
+
+    <arg name="rviz" default="false" />
+    
+    <param name="com_name" type="string" value="/dev/ttyUSB0"/>
+
+
+    <node pkg="uart_pub" type="uart_pub" name="uart_pub" output="screen" />
+
+<!--     <group if="$(arg rviz)"> -->
+<!--     <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find fast_lio)/rviz_cfg/loam_livox.rviz" /> -->
+<!--     </group> -->
+
+</launch>
