@@ -144,7 +144,7 @@ void Uart_Thread::Disable_Thread_Write_Uart()
  * @param uart_ptr 赋值的串口
  * @param X 任务1执行完毕后的数据
  */
-void Uart_Thread_Space::Mission1_Assignment(Uart_Thread *uart_ptr, float X,float Y, float Yaw)
+void Uart_Thread_Space::Lidar_Position(Uart_Thread *uart_ptr, float X,float Y, float Yaw)
 
 {
     printf("Mission1 Send!\n");

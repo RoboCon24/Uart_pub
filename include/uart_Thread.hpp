@@ -108,7 +108,7 @@ namespace Uart_Thread_Space
      * @param uart_ptr 赋值的串口
      * @param X 任务1执行完毕后的数据
      */
-    void Mission1_Assignment(Uart_Thread *uart_ptr, float X, float Y, float Z);
+    void Lidar_Position(Uart_Thread *uart_ptr, float X, float Y, float Z);
 
     /**
      * @brief 任务2赋值串口模板函数

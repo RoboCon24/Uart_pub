@@ -34,25 +34,21 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
 
     // 开启读写串口线程
     uart.Enable_Thread_Read_Uart();
-    
-    thread th1(thread1,std::ref(n));
+
+    ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/Odometry", 1000, odomCallback);
+
+    // thread th1(thread1,std::ref(n));
     //thread th2(thread2,std::ref(n));
 
     ros::spin();
     return 0;
 }
 
-/*任务1*/
-void thread1(ros::NodeHandle & n)
-{
-    ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/Odometry", 1000, odomCallback);
-    ros::Rate loop_rate(100); // 任务执行频率为1Hz
-    while (ros::ok())
-    {
-        ros::spinOnce();   // 处理回调函数
-        loop_rate.sleep(); // 控制循环频率
-    }
-}
+// /*任务1*/
+// void thread1(ros::NodeHandle & n)
+// {
+//     ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/Odometry", 1000, odomCallback);
+// }
 
 /*任务2
 void thread2(ros::NodeHandle &n)
