@@ -94,5 +94,5 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
     float yaw_rounded = std::round(yaw * 1000.0) / 1000.0;
 
     /*完成任务1后，发送一次串口，记得赋值时使用强制类型转换保证数据类型一致*/
-    uart.Mission_Send(Uart_Thread_Space::Mission1_Assignment, &uart, x_rounded, y_rounded, yaw_rounded);
+    uart.Mission_Send(Uart_Thread_Space::Lidar_Position, &uart, x_rounded, y_rounded, yaw_rounded);
 }
