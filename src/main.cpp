@@ -35,7 +35,7 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
     // 开启读写串口线程
     uart.Enable_Thread_Read_Uart();
 
-    ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/Odometry", 1000, odomCallback);
+    ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/aft_mapped_to_init", 1000, odomCallback);
 
     // thread th1(thread1,std::ref(n));
     //thread th2(thread2,std::ref(n));
@@ -47,7 +47,7 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
 // /*任务1*/
 // void thread1(ros::NodeHandle & n)
 // {
-//     ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/Odometry", 1000, odomCallback);
+//     ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/aft_mapped_to_init", 1000, odomCallback);
 // }
 
 /*任务2
