@@ -37,6 +37,8 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
 
     ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/aft_mapped_to_init", 1000, odomCallback);
 
+    int aa;
+
     // thread th1(thread1,std::ref(n));
     //thread th2(thread2,std::ref(n));
 
