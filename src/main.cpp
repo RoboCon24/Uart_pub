@@ -23,7 +23,7 @@ void thread2(ros::NodeHandle &n);
 /*回调函数*/
 void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
 
-    int main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     ros::init(argc, argv, "uart_pub");
     ros::NodeHandle n;
@@ -36,9 +36,8 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
     uart.Enable_Thread_Read_Uart();
 
     ros::Subscriber sub_odom = n.subscribe<nav_msgs::Odometry>("/aft_mapped_to_init", 1000, odomCallback);
-
     // thread th1(thread1,std::ref(n));
-    //thread th2(thread2,std::ref(n));
+    // thread th2(thread2,std::ref(n));
 
     ros::spin();
     return 0;
@@ -53,7 +52,7 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr &msg);
 /*任务2
 void thread2(ros::NodeHandle &n)
 {
-    
+
     while (ros::ok())
     {
         ros::Subscriber sub_pcl = n.subscribe<pcl::PointCloud<pcl::PointXYZI>>("/pcl", 1, pclCallback);
@@ -69,30 +68,45 @@ void thread2(ros::NodeHandle &n)
 
 void odomCallback(const nav_msgs::Odometry::ConstPtr &msg)
 {
-    float x = msg->pose.pose.position.x;
-    float y = msg->pose.pose.position.y;
-    float z = msg->pose.pose.position.z;
+    static ros::Time previous_time;
 
-    tf::Quaternion quat;
-    tf::quaternionMsgToTF(msg->pose.pose.orientation, quat);
+    if (previous_time.isZero())
+    {
+        previous_time = ros::Time::now();
+        return ;
+    }
+    ros::Time current_time = ros::Time::now();
+    ros::Duration elapsed_time = current_time - previous_time;
+    double elapsed_time_ms = elapsed_time.toSec() * 1000.0; // 转换为毫秒
 
-    double roll, pitch, yaw;                      
-    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw); // 四元数转欧拉角
-    roll=roll * 360 / (2 * M_PI);
-    pitch=pitch * 360 / (2 * M_PI);
-    yaw=yaw * 360 / (2 * M_PI);
+    if(elapsed_time_ms > 8.0f)
+    {
+        previous_time = current_time;
 
-    cout << "x: " << msg->pose.pose.position.x << " "
-         << "y: " << msg->pose.pose.position.y << " "
-         << "yaw: " << yaw << endl;
+        float x = msg->pose.pose.position.x;
+        float y = msg->pose.pose.position.y;
+        float z = msg->pose.pose.position.z;
 
-    float x_rounded = std::round(x * 1000.0) / 1000.0;
-    float y_rounded = std::round(y * 1000.0)/1000.0;
-    float z_rounded = std::round(z * 1000.0)/1000.0;
-    float roll_rounded = std::round(roll * 1000.0) / 1000.0;
-    float pitch_rounded = std::round(pitch * 1000.0) / 1000.0;
-    float yaw_rounded = std::round(yaw * 1000.0) / 1000.0;
+        tf::Quaternion quat;
+        tf::quaternionMsgToTF(msg->pose.pose.orientation, quat);
 
-    /*完成任务1后，发送一次串口，记得赋值时使用强制类型转换保证数据类型一致*/
-    uart.Mission_Send(Uart_Thread_Space::Lidar_Position, &uart, x_rounded, y_rounded, yaw_rounded);
+        double roll, pitch, yaw;
+        tf::Matrix3x3(quat).getRPY(roll, pitch, yaw); // 四元数转欧拉角
+        roll = roll * 360 / (2 * M_PI);
+        pitch = pitch * 360 / (2 * M_PI);
+        yaw = yaw * 360 / (2 * M_PI);
+
+        cout << "x: " << msg->pose.pose.position.x << " "
+                << "y: " << msg->pose.pose.position.y << " "
+                << "yaw: " << yaw << endl;
+
+        float x_rounded = std::round(x * 1000.0) / 1000.0;
+        float y_rounded = std::round(y * 1000.0) / 1000.0;
+        float z_rounded = std::round(z * 1000.0) / 1000.0;
+        float pitch_rounded = std::round(pitch * 1000.0) / 1000.0;
+        float yaw_rounded = std::round(yaw * 1000.0) / 1000.0;
+
+        /*完成任务1后，发送一次串口，记得赋值时使用强制类型转换保证数据类型一致*/
+        uart.Mission_Send(Uart_Thread_Space::Lidar_Position, &uart, x_rounded, y_rounded, yaw_rounded);
+    }  
 }

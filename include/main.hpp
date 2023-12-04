@@ -8,6 +8,7 @@
 #include <Eigen/Geometry>
 #include <Eigen/Dense>
 #include <Eigen/Core>
+#include <ctime>
 
 #include "uart.hpp"
 #include "uart_Thread.hpp"
